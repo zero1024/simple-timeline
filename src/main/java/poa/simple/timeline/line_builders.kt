@@ -4,14 +4,16 @@ import poa.simple.timeline.config.TimeRange
 import java.lang.IllegalStateException
 
 
+private const val borderChar = '|'
+
 fun buildLine(
     timeLine: YearTimeLine,
     rangeList: List<TimeRange>,
     lineText: (TimeRange) -> String,
-    lineShortText: (TimeRange) -> String? = { null },
+    lineShortText: (TimeRange) -> String,
 ): CharArray {
 
-    val line = CharArray(timeLine.length()) { ' ' }
+    val line = CharArray(timeLine.length()) { '-' }
 
     for (timeRange in rangeList) {
 
@@ -22,15 +24,15 @@ fun buildLine(
             if (l >= lineText(timeRange).length + 2) lineText(timeRange)
             else {
                 val shortText = lineShortText(timeRange)
-                if (shortText != null && l >= shortText.length + 2) shortText
+                if (l >= shortText.length + 2) shortText
                 else throw IllegalStateException()
             }
 
         val ident = (l - text.length) / 2
 
         val timeRangeChars = Array(l) { '=' }
-        timeRangeChars[0] = '|'
-        timeRangeChars[timeRangeChars.size - 1] = '|'
+        timeRangeChars[0] = borderChar
+        timeRangeChars[timeRangeChars.size - 1] = borderChar
 
         for (i in text.indices) {
             timeRangeChars[i + ident] = text[i]
@@ -41,7 +43,7 @@ fun buildLine(
         }
 
     }
-    return line
+    return line.adjust('=')
 }
 
 fun buildBorderLine(
@@ -54,8 +56,19 @@ fun buildBorderLine(
     val maxTill = rangeList.maxOf { it.till }
     val (fromIdx, tillIdx) = timeLine.getCoord(minFrom, maxTill)
 
-    line[fromIdx] = '|'
-    line[tillIdx] = '|'
+    line[fromIdx] = borderChar
+    line[tillIdx] = borderChar
 
     return line
+}
+
+private fun CharArray.adjust(fillChar: Char): CharArray {
+    var prev: Char? = null
+    for (idx in indices) {
+        if (this[idx] == prev && this[idx] == borderChar) {
+            this[idx] = fillChar
+        }
+        prev = this[idx]
+    }
+    return this
 }

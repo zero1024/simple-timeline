@@ -12,9 +12,9 @@ class ConsoleOutput(private val baseLine: CharArray) {
 
     fun addAndMergeUpToBaseLine(newLine: CharArray) {
         for ((idx, c) in newLine.withIndex()) {
-            if (c != ' ') {
+            if (c != ' ' && c != '-') {
                 for (line in linesAfter) {
-                    if (line[idx] == ' ') {
+                    if (line[idx] == ' ' || line[idx] == '-') {
                         line[idx] = c
                     }
                 }
