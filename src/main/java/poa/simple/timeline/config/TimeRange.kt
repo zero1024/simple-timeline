@@ -2,8 +2,7 @@ package poa.simple.timeline.config
 
 import org.valiktor.functions.isLessThan
 import org.valiktor.validate
-import java.math.BigDecimal
-import java.math.RoundingMode
+import poa.simple.timeline.decimalYear
 import java.time.LocalDate
 
 data class TimeRange(val code: String, val from: LocalDate, val till: LocalDate) {
@@ -19,5 +18,4 @@ data class TimeRange(val code: String, val from: LocalDate, val till: LocalDate)
 
 }
 
-private fun LocalDate.decimalYear() =
-    BigDecimal(this.year).add(BigDecimal(this.monthValue).divide(BigDecimal(12), 1, RoundingMode.HALF_UP))
+

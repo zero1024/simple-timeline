@@ -19,7 +19,7 @@ class TimeRangeSerializer : KSerializer<TimeRange> {
 
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("TIME_RANGE", PrimitiveKind.STRING)
     private val pattern =
-        ("(?<code>[a-zA-Z0-9]*)\\." +
+        ("(?<code>[a-zA-Z0-9_]*)\\." +
                 "(?<from>[0-9.]*)" +
                 "-" +
                 "(?<till>[0-9.]*)")

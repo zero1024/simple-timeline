@@ -4,6 +4,7 @@ import com.charleskorn.kaml.Yaml
 import poa.simple.timeline.YearTimeLine
 import poa.simple.timeline.buildBorderLine
 import poa.simple.timeline.buildLine
+import poa.simple.timeline.ceilYear
 import poa.simple.timeline.config.TimeLineConfig
 import poa.simple.timeline.config.TimeRange
 import poa.simple.timeline.output.ConsoleOutput
@@ -18,7 +19,7 @@ fun main(args: Array<String>) {
         Yaml.default.decodeFromStream(TimeLineConfig.serializer(), it)
     }
 
-    val timeLine = YearTimeLine(timeLineConfig.base.from.year, timeLineConfig.base.till.year)
+    val timeLine = YearTimeLine(timeLineConfig.base.from.year, timeLineConfig.base.till.ceilYear())
 
     val output = ConsoleOutput(timeLine.line)
 
@@ -26,9 +27,10 @@ fun main(args: Array<String>) {
 
         val borderLine = buildBorderLine(timeLine, timeRanges)
 
-        val dateLine = buildLine(timeLine, timeRanges) { it.formattedDates() }
-        val durationLine = buildLine(timeLine, timeRanges) { " ${it.yearsDuration()} years " }
-        val nameLine = buildLine(timeLine, timeRanges) { " ${it.name()} " }
+        val dateLine = buildLine(timeLine, timeRanges, { it.formattedDates() }, { it.shortFormattedDates() })
+        val durationLine =
+            buildLine(timeLine, timeRanges, { " ${it.yearsDuration()} years " }, { " ${it.yearsDuration()}y " })
+        val nameLine = buildLine(timeLine, timeRanges, { " ${it.name()} " })
 
         output.addAndMergeUpToBaseLine(borderLine)
         output.add(dateLine)
@@ -40,4 +42,6 @@ fun main(args: Array<String>) {
 }
 
 private val formatter = DateTimeFormatter.ofPattern("MM.yyyy")
+private val shortFormatter = DateTimeFormatter.ofPattern("MM")
 fun TimeRange.formattedDates() = " ${this.from.format(formatter)} - ${this.till.format(formatter)} "
+fun TimeRange.shortFormattedDates() = " ${this.from.format(shortFormatter)}-${this.till.format(shortFormatter)} "
