@@ -1,0 +1,10 @@
+base:
+  type: years
+  from: 2006
+  till: 9999
+
+timeRanges:
+  - - univer.2006.09.01-2011.06.21
+    - vektor.2011.07.01-2013.01.21
+  - - chistopol.2006-2013.02.01
+    - kazan.2013.02.01-2017.01.21
