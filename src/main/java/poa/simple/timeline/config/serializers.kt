@@ -14,7 +14,6 @@ private val now = LocalDate.now()
 /**
  * example: someCode.2006.9.1-2011.6.21
  */
-
 class TimeRangeSerializer : KSerializer<TimeRange> {
 
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("TIME_RANGE", PrimitiveKind.STRING)
@@ -31,24 +30,47 @@ class TimeRangeSerializer : KSerializer<TimeRange> {
 
         return TimeRange(
             code = groups.getStr("code"),
-            from = parseLocalDate(groups.getStr("from")),
-            till = parseLocalDate(groups.getStr("till"))
+            from = parseLocalDate(groups.getStr("from"))!!,
+            till = parseLocalDate(groups.getStr("till"))!!
         )
     }
 
     override fun serialize(encoder: Encoder, value: TimeRange) {
     }
+}
 
-    private fun MatchGroupCollection.getStr(name: String) = this[name]!!.value
+class EventSerializer : KSerializer<Event> {
+
+    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("EVENT", PrimitiveKind.STRING)
+
+    private val pattern =
+        ("(?<code>[a-zA-Z0-9_]*)\\." +
+                "(?<from>[0-9.]*)" +
+                "-?" +
+                "(?<till>[0-9.]*)")
+            .toRegex()
+
+    override fun deserialize(decoder: Decoder): Event {
+        val str = decoder.decodeString()
+        val groups = pattern.find(str)!!.groups
+
+        return Event(
+            code = groups.getStr("code"),
+            from = parseLocalDate(groups.getStr("from"))!!,
+            till = parseLocalDate(groups.getStr("till"))
+        )
+    }
+
+    override fun serialize(encoder: Encoder, value: Event) {
+    }
 }
 
 class LocalDateSerializer : KSerializer<LocalDate> {
-
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("LOCAL_DATE", PrimitiveKind.STRING)
 
     override fun deserialize(decoder: Decoder): LocalDate {
         val str = decoder.decodeString()
-        return parseLocalDate(str)
+        return parseLocalDate(str)!!
     }
 
     override fun serialize(encoder: Encoder, value: LocalDate) {
@@ -56,7 +78,12 @@ class LocalDateSerializer : KSerializer<LocalDate> {
 
 }
 
-private fun parseLocalDate(str: String): LocalDate {
+private fun MatchGroupCollection.getStr(name: String) = this[name]!!.value
+
+private fun parseLocalDate(str: String): LocalDate? {
+    if (str.isEmpty()) {
+        return null
+    }
     val strArray = str.split(".")
     val year = strArray[0].toInt()
     if (year == 9999) {
