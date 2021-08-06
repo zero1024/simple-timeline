@@ -29,7 +29,7 @@ fun main(args: Array<String>) {
         val dateLine = buildLine(timeLine, timeRanges, { it.formattedDates() }, { it.shortFormattedDates() })
         val durationLine =
             buildLine(timeLine, timeRanges, { " ${it.yearsDuration()} years " }, { " ${it.yearsDuration()}y " })
-        val nameLine = buildLine(timeLine, timeRanges, { " ${it.name()} " }, { " ${it.name().take(3)} " })
+        val nameLine = buildLine(timeLine, timeRanges, { " ${it.name()} " }, { " ${it.name().take(5)} " })
 
         output.addAndMergeUpToBaseLine(borderLine)
         output.add(dateLine)
