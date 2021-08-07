@@ -5,6 +5,10 @@ class ConsoleOutput(private val baseLine: CharArray) {
     private val linesBefore = ArrayList<CharArray>()
     private val linesAfter = ArrayList<CharArray>()
 
+    fun add(lines: List<CharArray>, direction: Direction = Direction.DOWN) {
+        lines.forEach { add(it, direction) }
+    }
+
     fun add(line: CharArray, direction: Direction = Direction.DOWN) {
         lines(direction).add(line)
     }

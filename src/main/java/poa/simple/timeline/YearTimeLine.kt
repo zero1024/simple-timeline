@@ -12,7 +12,7 @@ class YearTimeLine(startYear: Int, endYear: Int) {
     init {
         var idx = 2
         map = generateSequence(startYear) { it + 1 }
-            .takeWhile { it <= endYear }
+            .takeWhile { it <= endYear + 1 }
             .map { year ->
                 val yearPoint = YearPoint(
                     idx,
