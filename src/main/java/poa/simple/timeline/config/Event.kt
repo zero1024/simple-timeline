@@ -3,10 +3,7 @@ package poa.simple.timeline.config
 import kotlinx.serialization.Serializable
 import org.valiktor.functions.isLessThan
 import org.valiktor.validate
-import poa.simple.timeline.DD_MMM
-import poa.simple.timeline.MM
-import poa.simple.timeline.YYYY
-import poa.simple.timeline.decimalYear
+import poa.simple.timeline.*
 import poa.simple.timeline.output.ColoredChar.Companion.BLACK
 import java.time.LocalDate
 
@@ -31,7 +28,7 @@ data class Event(
         return if (till != null) {
             " ${till.decimalYear().subtract(from.decimalYear())}y "
         } else {
-            " ${this.from.format(DD_MMM)} "
+            " ${now.decimalYear().subtract(from.decimalYear())} years "
         }
     }
 
@@ -39,7 +36,7 @@ data class Event(
         return if (till != null) {
             " ${this.from.format(MM)}-${this.till.format(MM)} "
         } else {
-            " ${this.from.format(YYYY)} "
+            " ${this.from.format(DD_MMM)} "
         }
     }
 
