@@ -1,5 +1,6 @@
 package poa.simple.timeline.config
 
+import kotlinx.serialization.Serializable
 import org.valiktor.functions.isLessThan
 import org.valiktor.validate
 import poa.simple.timeline.MM
@@ -8,7 +9,13 @@ import poa.simple.timeline.decimalYear
 import poa.simple.timeline.output.ColoredChar.Companion.BLACK
 import java.time.LocalDate
 
-data class Event(val code: String, val from: LocalDate, val till: LocalDate?, val color: String = BLACK) {
+@Serializable
+data class Event(
+    val code: String,
+    val from: @Serializable(with = LocalDateSerializer::class) LocalDate,
+    val till: @Serializable(with = NullableLocalDateSerializer::class) LocalDate? = null,
+    val color: String = BLACK,
+) {
 
     init {
         validate(this) {

@@ -39,32 +39,6 @@ class TimeRangeSerializer : KSerializer<TimeRange> {
     }
 }
 
-class EventSerializer : KSerializer<Event> {
-
-    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("EVENT", PrimitiveKind.STRING)
-
-    private val pattern =
-        ("(?<code>[a-zA-Z0-9_]*)\\." +
-                "(?<from>[0-9.]*)" +
-                "-?" +
-                "(?<till>[0-9.]*)")
-            .toRegex()
-
-    override fun deserialize(decoder: Decoder): Event {
-        val str = decoder.decodeString()
-        val groups = pattern.find(str)!!.groups
-
-        return Event(
-            code = groups.getStr("code"),
-            from = parseLocalDate(groups.getStr("from"))!!,
-            till = parseLocalDate(groups.getStr("till"))
-        )
-    }
-
-    override fun serialize(encoder: Encoder, value: Event) {
-    }
-}
-
 class LocalDateSerializer : KSerializer<LocalDate> {
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("LOCAL_DATE", PrimitiveKind.STRING)
 

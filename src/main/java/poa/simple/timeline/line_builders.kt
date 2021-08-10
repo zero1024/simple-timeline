@@ -17,12 +17,12 @@ fun birthdayLine(
     timeLine: YearTimeLine,
     birthday: LocalDate,
 ): Array<ColoredChar> {
-    val line = Array(timeLine.length()) { ColoredChar('-', BLACK) }
+    val line = Array(timeLine.length()) { ColoredChar('-', "\u001B[43m") }
     for (year in timeLine.years()) {
         val date = LocalDate.of(year, birthday.monthValue, birthday.dayOfMonth)
         val pos = timeLine.getCoord(date) - 1
         val age = year - birthday.year
-        line.addText("${age}y", pos, BLACK)
+        line.addText("${age}y", pos, "\u001B[43m")
     }
     return line
 }

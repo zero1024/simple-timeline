@@ -7,7 +7,7 @@ import java.time.LocalDate
 data class TimeLineConfig(
     val base: Base,
     val timeRanges: List<TimeRangeList>,
-    val events: List<@Serializable(with = EventSerializer::class) Event>,
+    val events: List<Event>,
 ) {
 
     @Serializable

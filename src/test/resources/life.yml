@@ -19,5 +19,9 @@ timeRanges:
   - list: [ "dating.2018.10.20-9999.99.99" ]
     color: "\u001B[35m"
 events:
-  - marriage.2021.06.02
-  - offer_prague.2021.07.16
+  - code: marriage
+    from: 2021.06.02
+    color: "\u001B[35m"
+  - code: offer_prague
+    from: 2021.07.16
+    color: "\u001B[34m"

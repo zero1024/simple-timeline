@@ -7,7 +7,7 @@ class ConsoleOutput(baseLine: CharArray) {
     private val baseLine: Array<ColoredChar>
 
     init {
-        this.baseLine = baseLine.map { ColoredChar(it, BLACK) }.toTypedArray()
+        this.baseLine = baseLine.map { ColoredChar(it, "\u001B[43m") }.toTypedArray()
     }
 
     private val linesBefore = ArrayList<Array<ColoredChar>>()
