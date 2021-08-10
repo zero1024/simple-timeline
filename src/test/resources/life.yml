@@ -25,3 +25,9 @@ events:
   - code: offer_prague
     from: 2021.07.16
     color: "\u001B[34m"
+  - code: java_begin
+    from: 2012.06.21
+    color: "\u001B[34m"
+  - code: ZEL_34_31
+    from: 2018.06.27
+    color: "\u001B[32m"

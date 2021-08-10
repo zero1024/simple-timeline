@@ -6,5 +6,7 @@ import poa.simple.timeline.output.ColoredChar.Companion.BLACK
 @Serializable
 data class TimeRangeList(
     val color: String = BLACK,
-    val list: List<@Serializable(with = TimeRangeSerializer::class) TimeRange>,
-)
+    private val list: List<@Serializable(with = TimeRangeSerializer::class) TimeRange>,
+) {
+    val sortedList = list.sortedBy { it.from }
+}

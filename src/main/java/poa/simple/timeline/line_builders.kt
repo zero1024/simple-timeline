@@ -88,7 +88,7 @@ fun lineForTimeRanges(
     val durationLine = Array(timeLine.length()) { ColoredChar('-', rangeList.color) }
     val nameLine = Array(timeLine.length()) { ColoredChar('-', rangeList.color) }
 
-    for (timeRange in rangeList.list) {
+    for (timeRange in rangeList.sortedList) {
 
         val (fromIdx, tillIdx) = timeLine.getCoord(timeRange.from, timeRange.till)
         val l = tillIdx + 1 - fromIdx
@@ -145,8 +145,8 @@ fun supportLineForTimeRanges(
 ): Array<ColoredChar> {
     val line = Array(timeLine.length()) { EMPTY_CHAR }
 
-    val minFrom = rangeList.list.minOf { it.from }
-    val maxTill = rangeList.list.maxOf { it.till }
+    val minFrom = rangeList.sortedList.minOf { it.from }
+    val maxTill = rangeList.sortedList.maxOf { it.till }
     val (fromIdx, tillIdx) = timeLine.getCoord(minFrom, maxTill)
 
     line[fromIdx] = ColoredChar(borderChar, rangeList.color)

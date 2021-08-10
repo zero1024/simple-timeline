@@ -15,7 +15,7 @@ class YearTimeLine(private val startYear: Int, private val endYear: Int) {
             .map { year ->
                 val yearPoint = YearPoint(
                     idx,
-                    year.toString().asSequence() + generateSequence { ' ' }.take(scale - 4), year
+                    year.toString().asSequence() + generateSequence { '-' }.take(scale - 4), year
                 )
                 idx += scale
                 year to yearPoint

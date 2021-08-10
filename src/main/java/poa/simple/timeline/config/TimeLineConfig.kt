@@ -7,8 +7,10 @@ import java.time.LocalDate
 data class TimeLineConfig(
     val base: Base,
     val timeRanges: List<TimeRangeList>,
-    val events: List<Event>,
+    private val events: List<Event>,
 ) {
+
+    val sortedEvents = events.sortedBy { it.from }
 
     @Serializable
     data class Base(

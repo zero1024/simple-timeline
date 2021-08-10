@@ -39,12 +39,13 @@ fun main(args: Array<String>) {
         handleEvents(timeLine, unhandledTimeRanges.convertToEvents(), output, DOWN)
     }
 
-    handleEvents(timeLine, timeLineConfig.events, output, UP)
+    handleEvents(timeLine, timeLineConfig.sortedEvents, output, UP)
 
     output.print()
 }
 
-private fun TimeRangeList.convertToEvents() = this.list.map { Event(it.code, it.from, it.till, color = this.color) }
+private fun TimeRangeList.convertToEvents() =
+    this.sortedList.map { Event(it.code, it.from, it.till, color = this.color) }
 
 private fun handleEvents(
     timeLine: YearTimeLine,
