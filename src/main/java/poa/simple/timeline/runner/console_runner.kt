@@ -4,7 +4,7 @@ import com.charleskorn.kaml.Yaml
 import poa.simple.timeline.*
 import poa.simple.timeline.config.TimeLineConfig
 import poa.simple.timeline.output.ConsoleOutput
-import poa.simple.timeline.output.ConsoleOutput.Direction.*
+import poa.simple.timeline.output.ConsoleOutput.Direction.UP
 import java.io.File
 
 fun main(args: Array<String>) {
@@ -18,6 +18,11 @@ fun main(args: Array<String>) {
     val timeLine = YearTimeLine(timeLineConfig.base.from.year, timeLineConfig.base.till.year)
 
     val output = ConsoleOutput(timeLine.line)
+
+    if (timeLineConfig.base.birthday != null) {
+        val line = birthdayLine(timeLine, timeLineConfig.base.birthday)
+        output.add(line, UP)
+    }
 
     for (timeRanges in timeLineConfig.timeRanges) {
 

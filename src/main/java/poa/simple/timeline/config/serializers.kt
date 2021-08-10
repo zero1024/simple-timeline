@@ -69,13 +69,22 @@ class LocalDateSerializer : KSerializer<LocalDate> {
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("LOCAL_DATE", PrimitiveKind.STRING)
 
     override fun deserialize(decoder: Decoder): LocalDate {
-        val str = decoder.decodeString()
-        return parseLocalDate(str)!!
+        return parseLocalDate(decoder.decodeString())!!
     }
 
     override fun serialize(encoder: Encoder, value: LocalDate) {
     }
+}
 
+class NullableLocalDateSerializer : KSerializer<LocalDate?> {
+    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("LOCAL_DATE", PrimitiveKind.STRING)
+
+    override fun deserialize(decoder: Decoder): LocalDate? {
+        return parseLocalDate(decoder.decodeString())
+    }
+
+    override fun serialize(encoder: Encoder, value: LocalDate?) {
+    }
 }
 
 private fun MatchGroupCollection.getStr(name: String) = this[name]!!.value

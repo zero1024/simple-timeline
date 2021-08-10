@@ -2,7 +2,7 @@ package poa.simple.timeline
 
 import java.time.LocalDate
 
-class YearTimeLine(startYear: Int, endYear: Int) {
+class YearTimeLine(private val startYear: Int, private val endYear: Int) {
 
     private val scale = 12
     private val map: Map<Int, YearPoint>
@@ -11,8 +11,7 @@ class YearTimeLine(startYear: Int, endYear: Int) {
 
     init {
         var idx = 2
-        map = generateSequence(startYear) { it + 1 }
-            .takeWhile { it <= endYear + 1 }
+        map = yearsPlusOne()
             .map { year ->
                 val yearPoint = YearPoint(
                     idx,
@@ -24,10 +23,14 @@ class YearTimeLine(startYear: Int, endYear: Int) {
         line = map.flatMap { it.value.chars }.toCharArray()
     }
 
-    fun getCoord(from: LocalDate, till: LocalDate): Pair<Int, Int> {
-        val fromYearPosition = map[from.year]!!.position
-        val tillYearPosition = map[till.year]!!.position
-        return fromYearPosition + from.monthValue - 1 to tillYearPosition + till.monthValue - 1
+    fun yearsPlusOne() = generateSequence(startYear) { it + 1 }.takeWhile { it <= endYear + 1 }
+    fun years() = generateSequence(startYear) { it + 1 }.takeWhile { it <= endYear }
+
+    fun getCoord(from: LocalDate, till: LocalDate) = getCoord(from) to getCoord(till)
+
+    fun getCoord(date: LocalDate): Int {
+        val position = map[date.year]!!.position
+        return position + date.monthValue - 1
     }
 
     fun length() = line.size

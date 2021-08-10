@@ -2,11 +2,26 @@ package poa.simple.timeline
 
 import poa.simple.timeline.config.Event
 import poa.simple.timeline.config.TimeRange
+import java.time.LocalDate
 
 
 private const val borderChar = '|'
 
 private const val maxEventText = 20
+
+fun birthdayLine(
+    timeLine: YearTimeLine,
+    birthday: LocalDate,
+): CharArray {
+    val line = CharArray(timeLine.length()) { '-' }
+    for (year in timeLine.years()) {
+        val date = LocalDate.of(year, birthday.monthValue, birthday.dayOfMonth)
+        val pos = timeLine.getCoord(date) - 1
+        val age = year - birthday.year
+        line.addText("${age}y", pos)
+    }
+    return line
+}
 
 fun lineForEvents(
     timeLine: YearTimeLine,
@@ -49,13 +64,11 @@ fun lineForEvents(
 
                 val ident = (l - text.length) / 2
 
-                val chars = Array(l) { '=' }
+                val chars = CharArray(l) { '=' }
                 chars[0] = borderChar
                 chars[chars.size - 1] = borderChar
 
-                for (i in text.indices) {
-                    chars[i + ident] = text[i]
-                }
+                chars.addText(text, ident)
 
                 for ((idx, char) in chars.withIndex()) {
                     line[idx + fromIdx] = char
@@ -94,13 +107,11 @@ fun lineForTimeRanges(
 
         val ident = (l - text.length) / 2
 
-        val timeRangeChars = Array(l) { '=' }
+        val timeRangeChars = CharArray(l) { '=' }
         timeRangeChars[0] = borderChar
         timeRangeChars[timeRangeChars.size - 1] = borderChar
 
-        for (i in text.indices) {
-            timeRangeChars[i + ident] = text[i]
-        }
+        timeRangeChars.addText(text, ident)
 
         for ((idx, char) in timeRangeChars.withIndex()) {
             line[idx + fromIdx] = char
@@ -108,6 +119,12 @@ fun lineForTimeRanges(
 
     }
     return line.adjust('=')
+}
+
+fun CharArray.addText(text: String, ident: Int) {
+    for (i in text.indices) {
+        this[i + ident] = text[i]
+    }
 }
 
 fun supportLineForTimeRanges(

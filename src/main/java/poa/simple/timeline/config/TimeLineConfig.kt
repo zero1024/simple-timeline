@@ -12,9 +12,9 @@ data class TimeLineConfig(
 
     @Serializable
     data class Base(
-        val type: String,
         val from: @Serializable(with = LocalDateSerializer::class) LocalDate,
         val till: @Serializable(with = LocalDateSerializer::class) LocalDate,
+        val birthday: @Serializable(with = NullableLocalDateSerializer::class) LocalDate?,
     )
 
 }
