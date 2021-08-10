@@ -2,8 +2,11 @@ package poa.simple.timeline.runner
 
 import com.charleskorn.kaml.Yaml
 import poa.simple.timeline.*
+import poa.simple.timeline.config.Event
 import poa.simple.timeline.config.TimeLineConfig
+import poa.simple.timeline.config.TimeRange
 import poa.simple.timeline.output.ConsoleOutput
+import poa.simple.timeline.output.ConsoleOutput.Direction.DOWN
 import poa.simple.timeline.output.ConsoleOutput.Direction.UP
 import java.io.File
 
@@ -28,25 +31,32 @@ fun main(args: Array<String>) {
 
         val borderLine = supportLineForTimeRanges(timeLine, timeRanges)
 
-        val dateLine = lineForTimeRanges(timeLine, timeRanges, { it.date() }, { it.shortDate() })
-        val durationLine = lineForTimeRanges(timeLine, timeRanges, { it.duration() }, { it.shortDuration() })
-        val nameLine = lineForTimeRanges(timeLine, timeRanges, { it.name() }, { it.shortName() })
+        val (lines, unhandledTimeRanges) = lineForTimeRanges(timeLine, timeRanges)
 
         output.addAndMergeUpToBaseLine(borderLine)
-        output.add(dateLine)
-        output.add(durationLine)
-        output.add(nameLine)
+        output.add(lines)
+
+        handleEvents(timeLine, unhandledTimeRanges.convertToEvents(), output, DOWN)
     }
 
-    var events = timeLineConfig.events
-
-    while (events.isNotEmpty()) {
-        val (lines, unhandledEvents) = lineForEvents(timeLine, events)
-        output.addAndMergeUpToBaseLine(supportLineForEvents(timeLine, events), UP)
-        output.add(lines, UP)
-        events = unhandledEvents
-    }
-
+    handleEvents(timeLine, timeLineConfig.events, output, UP)
 
     output.print()
+}
+
+private fun List<TimeRange>.convertToEvents() = this.map { Event(it.code, it.from, it.till) }
+
+private fun handleEvents(
+    timeLine: YearTimeLine,
+    events: List<Event>,
+    output: ConsoleOutput,
+    direction: ConsoleOutput.Direction,
+) {
+    var tmpEvents = events
+    while (tmpEvents.isNotEmpty()) {
+        val (lines, unhandledEvents) = lineForEvents(timeLine, tmpEvents)
+        output.add(supportLineForEvents(timeLine, tmpEvents), direction)
+        output.add(lines, direction)
+        tmpEvents = unhandledEvents
+    }
 }

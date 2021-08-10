@@ -2,6 +2,7 @@ package poa.simple.timeline
 
 import poa.simple.timeline.config.Event
 import poa.simple.timeline.config.TimeRange
+import java.lang.IllegalStateException
 import java.time.LocalDate
 
 
@@ -57,27 +58,17 @@ fun lineForEvents(
         } else {
             prevTillIdx = tillIdx
 
-            fun applyToLine(text: String, line: CharArray) {
+            val dateText = event.date()
+            val durationText = event.duration()
+            val nameText = event.name()
 
-                if (l < text.length + 2)
-                    throw IllegalStateException()
-
-                val ident = (l - text.length) / 2
-
-                val chars = CharArray(l) { '=' }
-                chars[0] = borderChar
-                chars[chars.size - 1] = borderChar
-
-                chars.addText(text, ident)
-
-                for ((idx, char) in chars.withIndex()) {
-                    line[idx + fromIdx] = char
-                }
+            if (!lengthIsValid(l, dateText, durationText, nameText)) {
+                throw IllegalStateException()
             }
 
-            applyToLine(event.date(), dateLine)
-            applyToLine(event.duration(), durationLine)
-            applyToLine(event.name(), nameLine)
+            dateLine.addText(dateText, fromIdx, l)
+            durationLine.addText(durationText, fromIdx, l)
+            nameLine.addText(nameText, fromIdx, l)
         }
     }
     return listOf(dateLine, durationLine, nameLine).map { it.adjust('=') } to unhandledEvents
@@ -86,45 +77,63 @@ fun lineForEvents(
 fun lineForTimeRanges(
     timeLine: YearTimeLine,
     rangeList: List<TimeRange>,
-    lineText: (TimeRange) -> String,
-    lineShortText: (TimeRange) -> String,
-): CharArray {
+): Pair<List<CharArray>, List<TimeRange>> {
 
-    val line = CharArray(timeLine.length()) { '-' }
+    val unhandled = ArrayList<TimeRange>()
+
+    val dateLine = CharArray(timeLine.length()) { '-' }
+    val durationLine = CharArray(timeLine.length()) { '-' }
+    val nameLine = CharArray(timeLine.length()) { '-' }
 
     for (timeRange in rangeList) {
 
         val (fromIdx, tillIdx) = timeLine.getCoord(timeRange.from, timeRange.till)
         val l = tillIdx + 1 - fromIdx
 
-        val text =
-            if (l >= lineText(timeRange).length + 2) lineText(timeRange)
-            else {
-                val shortText = lineShortText(timeRange)
-                if (l >= shortText.length + 2) shortText
-                else throw IllegalStateException()
-            }
+        val dateText = timeRange.date { l >= it.length + 2 }
+        val durationText = timeRange.duration { l >= it.length + 2 }
+        val nameText = timeRange.name { l >= it.length + 2 }
 
-        val ident = (l - text.length) / 2
-
-        val timeRangeChars = CharArray(l) { '=' }
-        timeRangeChars[0] = borderChar
-        timeRangeChars[timeRangeChars.size - 1] = borderChar
-
-        timeRangeChars.addText(text, ident)
-
-        for ((idx, char) in timeRangeChars.withIndex()) {
-            line[idx + fromIdx] = char
+        if (lengthIsValid(l, dateText, durationText, nameText)) {
+            dateLine.addText(dateText, fromIdx, l)
+            durationLine.addText(durationText, fromIdx, l)
+            nameLine.addText(nameText, fromIdx, l)
+        } else {
+            unhandled.add(timeRange)
         }
 
+
     }
-    return line.adjust('=')
+    return listOf(dateLine, durationLine, nameLine).map { it.adjust('=') } to unhandled
 }
 
-fun CharArray.addText(text: String, ident: Int) {
+fun CharArray.addText(text: String, offset: Int) {
     for (i in text.indices) {
-        this[i + ident] = text[i]
+        this[i + offset] = text[i]
     }
+}
+
+fun CharArray.addText(text: String, offset: Int, length: Int) {
+
+    val indent = (length - text.length) / 2
+
+    val chars = CharArray(length) { '=' }
+    chars[0] = borderChar
+    chars[chars.size - 1] = borderChar
+
+    chars.addText(text, indent)
+
+    for ((idx, char) in chars.withIndex()) {
+        this[idx + offset] = char
+    }
+}
+
+fun lengthIsValid(length: Int, vararg texts: String): Boolean {
+    for (t in texts) {
+        if (length < t.length + 2)
+            return false
+    }
+    return true
 }
 
 fun supportLineForTimeRanges(
@@ -150,9 +159,9 @@ fun supportLineForEvents(
     val line = CharArray(timeLine.length()) { ' ' }
 
     for (event in events) {
-        val minFrom = event.from
-        val maxTill = event.till ?: event.from
-        val (fromIdx, tillIdx) = timeLine.getCoord(minFrom, maxTill)
+        val from = event.from
+        val till = event.till ?: event.from
+        val (fromIdx, tillIdx) = timeLine.getCoord(from, till)
 
         line[fromIdx] = borderChar
         line[tillIdx] = borderChar

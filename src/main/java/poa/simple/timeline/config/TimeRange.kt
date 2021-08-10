@@ -27,6 +27,12 @@ data class TimeRange(val code: String, val from: LocalDate, val till: LocalDate)
 
     fun shortDate() = " ${this.from.format(MM)}-${this.till.format(MM)} "
 
+    fun name(condition: (String) -> Boolean) = if (condition(name())) name() else shortName()
+
+    fun duration(condition: (String) -> Boolean) = if (condition(duration())) duration() else shortDuration()
+
+    fun date(condition: (String) -> Boolean) = if (condition(date())) date() else shortDate()
+
 
 }
 
