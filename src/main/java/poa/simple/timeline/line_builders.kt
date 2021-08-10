@@ -166,8 +166,8 @@ fun supportLineForEvents(
         val till = event.till ?: event.from
         val (fromIdx, tillIdx) = timeLine.getCoord(from, till)
 
-        line[fromIdx] = ColoredChar(borderChar, BLACK)
-        line[tillIdx] = ColoredChar(borderChar, BLACK)
+        line[fromIdx] = ColoredChar(borderChar, event.color)
+        line[tillIdx] = ColoredChar(borderChar, event.color)
     }
 
     return line

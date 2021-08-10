@@ -1,7 +1,5 @@
 package poa.simple.timeline.output
 
-import poa.simple.timeline.output.ColoredChar.Companion.BLACK
-
 class ConsoleOutput(baseLine: CharArray) {
 
     private val baseLine: Array<ColoredChar>
@@ -45,13 +43,13 @@ class ConsoleOutput(baseLine: CharArray) {
     }
 
     private fun print(chars: Array<ColoredChar>) {
-        var color = BLACK
         for (char in chars) {
-            if (char.color != color) {
-                color = char.color
-                print(char.color)
+            print(char.color)
+            if (Character.isLetterOrDigit(char.char)) {
+                print("\u001B[1m")
             }
             print(char.char)
+            print("\u001B[0m")
         }
         println()
     }
