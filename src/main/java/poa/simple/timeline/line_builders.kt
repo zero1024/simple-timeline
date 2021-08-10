@@ -2,7 +2,10 @@ package poa.simple.timeline
 
 import poa.simple.timeline.config.Event
 import poa.simple.timeline.config.TimeRange
-import java.lang.IllegalStateException
+import poa.simple.timeline.config.TimeRangeList
+import poa.simple.timeline.output.ColoredChar
+import poa.simple.timeline.output.ColoredChar.Companion.BLACK
+import poa.simple.timeline.output.ColoredChar.Companion.EMPTY_CHAR
 import java.time.LocalDate
 
 
@@ -13,13 +16,13 @@ private const val maxEventText = 20
 fun birthdayLine(
     timeLine: YearTimeLine,
     birthday: LocalDate,
-): CharArray {
-    val line = CharArray(timeLine.length()) { '-' }
+): Array<ColoredChar> {
+    val line = Array(timeLine.length()) { ColoredChar('-', BLACK) }
     for (year in timeLine.years()) {
         val date = LocalDate.of(year, birthday.monthValue, birthday.dayOfMonth)
         val pos = timeLine.getCoord(date) - 1
         val age = year - birthday.year
-        line.addText("${age}y", pos)
+        line.addText("${age}y", pos, BLACK)
     }
     return line
 }
@@ -27,13 +30,13 @@ fun birthdayLine(
 fun lineForEvents(
     timeLine: YearTimeLine,
     events: List<Event>,
-): Pair<List<CharArray>, List<Event>> {
+): Pair<List<Array<ColoredChar>>, List<Event>> {
 
     val unhandledEvents = ArrayList<Event>()
 
-    val dateLine = CharArray(timeLine.length()) { ' ' }
-    val durationLine = CharArray(timeLine.length()) { ' ' }
-    val nameLine = CharArray(timeLine.length()) { ' ' }
+    val dateLine = Array(timeLine.length()) { EMPTY_CHAR }
+    val durationLine = Array(timeLine.length()) { EMPTY_CHAR }
+    val nameLine = Array(timeLine.length()) { EMPTY_CHAR }
 
     var prevTillIdx = 0
     for (event in events) {
@@ -66,9 +69,9 @@ fun lineForEvents(
                 throw IllegalStateException()
             }
 
-            dateLine.addText(dateText, fromIdx, l)
-            durationLine.addText(durationText, fromIdx, l)
-            nameLine.addText(nameText, fromIdx, l)
+            dateLine.addText(dateText, fromIdx, l, event.color)
+            durationLine.addText(durationText, fromIdx, l, event.color)
+            nameLine.addText(nameText, fromIdx, l, event.color)
         }
     }
     return listOf(dateLine, durationLine, nameLine).map { it.adjust('=') } to unhandledEvents
@@ -76,16 +79,16 @@ fun lineForEvents(
 
 fun lineForTimeRanges(
     timeLine: YearTimeLine,
-    rangeList: List<TimeRange>,
-): Pair<List<CharArray>, List<TimeRange>> {
+    rangeList: TimeRangeList,
+): Pair<List<Array<ColoredChar>>, TimeRangeList> {
 
     val unhandled = ArrayList<TimeRange>()
 
-    val dateLine = CharArray(timeLine.length()) { '-' }
-    val durationLine = CharArray(timeLine.length()) { '-' }
-    val nameLine = CharArray(timeLine.length()) { '-' }
+    val dateLine = Array(timeLine.length()) { ColoredChar('-', rangeList.color) }
+    val durationLine = Array(timeLine.length()) { ColoredChar('-', rangeList.color) }
+    val nameLine = Array(timeLine.length()) { ColoredChar('-', rangeList.color) }
 
-    for (timeRange in rangeList) {
+    for (timeRange in rangeList.list) {
 
         val (fromIdx, tillIdx) = timeLine.getCoord(timeRange.from, timeRange.till)
         val l = tillIdx + 1 - fromIdx
@@ -95,33 +98,33 @@ fun lineForTimeRanges(
         val nameText = timeRange.name { l >= it.length + 2 }
 
         if (lengthIsValid(l, dateText, durationText, nameText)) {
-            dateLine.addText(dateText, fromIdx, l)
-            durationLine.addText(durationText, fromIdx, l)
-            nameLine.addText(nameText, fromIdx, l)
+            dateLine.addText(dateText, fromIdx, l, rangeList.color)
+            durationLine.addText(durationText, fromIdx, l, rangeList.color)
+            nameLine.addText(nameText, fromIdx, l, rangeList.color)
         } else {
             unhandled.add(timeRange)
         }
 
 
     }
-    return listOf(dateLine, durationLine, nameLine).map { it.adjust('=') } to unhandled
+    return listOf(dateLine, durationLine, nameLine).map { it.adjust('=') } to TimeRangeList(rangeList.color, unhandled)
 }
 
-fun CharArray.addText(text: String, offset: Int) {
+fun Array<ColoredChar>.addText(text: String, offset: Int, color: String) {
     for (i in text.indices) {
-        this[i + offset] = text[i]
+        this[i + offset] = ColoredChar(text[i], color)
     }
 }
 
-fun CharArray.addText(text: String, offset: Int, length: Int) {
+fun Array<ColoredChar>.addText(text: String, offset: Int, length: Int, color: String) {
 
     val indent = (length - text.length) / 2
 
-    val chars = CharArray(length) { '=' }
-    chars[0] = borderChar
-    chars[chars.size - 1] = borderChar
+    val chars = Array(length) { ColoredChar('=', color) }
+    chars[0] = ColoredChar(borderChar, color)
+    chars[chars.size - 1] = ColoredChar(borderChar, color)
 
-    chars.addText(text, indent)
+    chars.addText(text, indent, color)
 
     for ((idx, char) in chars.withIndex()) {
         this[idx + offset] = char
@@ -138,16 +141,16 @@ fun lengthIsValid(length: Int, vararg texts: String): Boolean {
 
 fun supportLineForTimeRanges(
     timeLine: YearTimeLine,
-    rangeList: List<TimeRange>,
-): CharArray {
-    val line = CharArray(timeLine.length()) { ' ' }
+    rangeList: TimeRangeList,
+): Array<ColoredChar> {
+    val line = Array(timeLine.length()) { EMPTY_CHAR }
 
-    val minFrom = rangeList.minOf { it.from }
-    val maxTill = rangeList.maxOf { it.till }
+    val minFrom = rangeList.list.minOf { it.from }
+    val maxTill = rangeList.list.maxOf { it.till }
     val (fromIdx, tillIdx) = timeLine.getCoord(minFrom, maxTill)
 
-    line[fromIdx] = borderChar
-    line[tillIdx] = borderChar
+    line[fromIdx] = ColoredChar(borderChar, rangeList.color)
+    line[tillIdx] = ColoredChar(borderChar, rangeList.color)
 
     return line
 }
@@ -155,26 +158,26 @@ fun supportLineForTimeRanges(
 fun supportLineForEvents(
     timeLine: YearTimeLine,
     events: List<Event>,
-): CharArray {
-    val line = CharArray(timeLine.length()) { ' ' }
+): Array<ColoredChar> {
+    val line = Array(timeLine.length()) { EMPTY_CHAR }
 
     for (event in events) {
         val from = event.from
         val till = event.till ?: event.from
         val (fromIdx, tillIdx) = timeLine.getCoord(from, till)
 
-        line[fromIdx] = borderChar
-        line[tillIdx] = borderChar
+        line[fromIdx] = ColoredChar(borderChar, BLACK)
+        line[tillIdx] = ColoredChar(borderChar, BLACK)
     }
 
     return line
 }
 
-private fun CharArray.adjust(fillChar: Char): CharArray {
-    var prev: Char? = null
+private fun Array<ColoredChar>.adjust(fillChar: Char): Array<ColoredChar> {
+    var prev: ColoredChar? = null
     for (idx in indices) {
-        if (this[idx] == prev && this[idx] == borderChar) {
-            this[idx] = fillChar
+        if (this[idx] == prev && this[idx].char == borderChar) {
+            this[idx] = ColoredChar(fillChar, prev.color)
         }
         prev = this[idx]
     }

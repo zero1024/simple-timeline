@@ -1,23 +1,31 @@
 package poa.simple.timeline.output
 
-class ConsoleOutput(private val baseLine: CharArray) {
+import poa.simple.timeline.output.ColoredChar.Companion.BLACK
 
-    private val linesBefore = ArrayList<CharArray>()
-    private val linesAfter = ArrayList<CharArray>()
+class ConsoleOutput(baseLine: CharArray) {
 
-    fun add(lines: List<CharArray>, direction: Direction = Direction.DOWN) {
+    private val baseLine: Array<ColoredChar>
+
+    init {
+        this.baseLine = baseLine.map { ColoredChar(it, BLACK) }.toTypedArray()
+    }
+
+    private val linesBefore = ArrayList<Array<ColoredChar>>()
+    private val linesAfter = ArrayList<Array<ColoredChar>>()
+
+    fun add(lines: List<Array<ColoredChar>>, direction: Direction) {
         lines.forEach { add(it, direction) }
     }
 
-    fun add(line: CharArray, direction: Direction = Direction.DOWN) {
+    fun add(line: Array<ColoredChar>, direction: Direction) {
         lines(direction).add(line)
     }
 
-    fun addAndMergeUpToBaseLine(newLine: CharArray, direction: Direction = Direction.DOWN) {
+    fun addAndMergeUpToBaseLine(newLine: Array<ColoredChar>, direction: Direction) {
         for ((idx, c) in newLine.withIndex()) {
-            if (c != ' ' && c != '-') {
+            if (c.char != ' ' && c.char != '-') {
                 for (line in lines(direction)) {
-                    if (line[idx] == ' ' || line[idx] == '-') {
+                    if (line[idx].char == ' ' || line[idx].char == '-') {
                         line[idx] = c
                     }
                 }
@@ -36,9 +44,14 @@ class ConsoleOutput(private val baseLine: CharArray) {
         }
     }
 
-    private fun print(chars: CharArray) {
+    private fun print(chars: Array<ColoredChar>) {
+        var color = BLACK
         for (char in chars) {
-            print(char)
+            if (char.color != color) {
+                color = char.color
+                print(char.color)
+            }
+            print(char.char)
         }
         println()
     }
@@ -47,7 +60,7 @@ class ConsoleOutput(private val baseLine: CharArray) {
         UP, DOWN
     }
 
-    private fun lines(direction: Direction): ArrayList<CharArray> {
+    private fun lines(direction: Direction): ArrayList<Array<ColoredChar>> {
         return when (direction) {
             Direction.UP -> linesBefore
             Direction.DOWN -> linesAfter

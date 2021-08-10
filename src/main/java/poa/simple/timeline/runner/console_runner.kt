@@ -4,7 +4,7 @@ import com.charleskorn.kaml.Yaml
 import poa.simple.timeline.*
 import poa.simple.timeline.config.Event
 import poa.simple.timeline.config.TimeLineConfig
-import poa.simple.timeline.config.TimeRange
+import poa.simple.timeline.config.TimeRangeList
 import poa.simple.timeline.output.ConsoleOutput
 import poa.simple.timeline.output.ConsoleOutput.Direction.DOWN
 import poa.simple.timeline.output.ConsoleOutput.Direction.UP
@@ -33,8 +33,8 @@ fun main(args: Array<String>) {
 
         val (lines, unhandledTimeRanges) = lineForTimeRanges(timeLine, timeRanges)
 
-        output.addAndMergeUpToBaseLine(borderLine)
-        output.add(lines)
+        output.addAndMergeUpToBaseLine(borderLine, DOWN)
+        output.add(lines, DOWN)
 
         handleEvents(timeLine, unhandledTimeRanges.convertToEvents(), output, DOWN)
     }
@@ -44,7 +44,7 @@ fun main(args: Array<String>) {
     output.print()
 }
 
-private fun List<TimeRange>.convertToEvents() = this.map { Event(it.code, it.from, it.till) }
+private fun TimeRangeList.convertToEvents() = this.list.map { Event(it.code, it.from, it.till, color = this.color) }
 
 private fun handleEvents(
     timeLine: YearTimeLine,

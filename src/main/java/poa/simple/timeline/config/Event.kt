@@ -5,9 +5,10 @@ import org.valiktor.validate
 import poa.simple.timeline.MM
 import poa.simple.timeline.MM_YYYY
 import poa.simple.timeline.decimalYear
+import poa.simple.timeline.output.ColoredChar.Companion.BLACK
 import java.time.LocalDate
 
-data class Event(val code: String, val from: LocalDate, val till: LocalDate?) {
+data class Event(val code: String, val from: LocalDate, val till: LocalDate?, val color: String = BLACK) {
 
     init {
         validate(this) {
