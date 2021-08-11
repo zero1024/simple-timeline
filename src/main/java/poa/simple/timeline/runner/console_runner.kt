@@ -2,9 +2,11 @@ package poa.simple.timeline.runner
 
 import com.charleskorn.kaml.Yaml
 import poa.simple.timeline.*
+import poa.simple.timeline.builder.EventLineBuilder
 import poa.simple.timeline.config.Event
 import poa.simple.timeline.config.TimeLineConfig
 import poa.simple.timeline.config.TimeRangeList
+import poa.simple.timeline.output.ColoredChar.Companion.BLACK
 import poa.simple.timeline.output.ConsoleOutput
 import poa.simple.timeline.output.ConsoleOutput.Direction.DOWN
 import poa.simple.timeline.output.ConsoleOutput.Direction.UP
@@ -27,6 +29,9 @@ fun main(args: Array<String>) {
         output.add(line, UP)
     }
 
+
+    val eventLineBuilder = EventLineBuilder(' ', BLACK)
+
     for (timeRanges in timeLineConfig.timeRanges) {
 
         val borderLine = supportLineForTimeRanges(timeLine, timeRanges)
@@ -36,10 +41,15 @@ fun main(args: Array<String>) {
         output.addAndMergeUpToBaseLine(borderLine, DOWN)
         output.add(lines, DOWN)
 
-        handleEvents(timeLine, unhandledTimeRanges.convertToEvents(), output, DOWN, false)
+        eventLineBuilder.handleEvents(timeLine, unhandledTimeRanges.convertToEvents(), output, DOWN, false)
     }
 
-    handleEvents(timeLine, timeLineConfig.sortedEvents, output, UP, true)
+    for (eventGroup in timeLineConfig.eventGroups) {
+        EventLineBuilder('-', eventGroup.color)
+            .handleEvents(timeLine, eventGroup.sortedList, output, UP, true)
+    }
+
+    eventLineBuilder.handleEvents(timeLine, timeLineConfig.sortedEvents, output, UP, true)
 
     output.print()
 }
@@ -47,7 +57,7 @@ fun main(args: Array<String>) {
 private fun TimeRangeList.convertToEvents() =
     this.sortedList.map { Event(it.code, it.from, it.till, color = this.color) }
 
-private fun handleEvents(
+private fun EventLineBuilder.handleEvents(
     timeLine: YearTimeLine,
     events: List<Event>,
     output: ConsoleOutput,

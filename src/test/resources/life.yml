@@ -19,22 +19,25 @@ timeRanges:
     color: "\u001B[32m"
   - list: [ "dating.2018.10.20-9999.99.99" ]
     color: "\u001B[35m"
-events:
-  - code: marriage
-    from: 2021.06.02
+
+eventGroups:
+  - list:
+      - code: KATYA_MOVED
+        from: 2019.07.05
+      - code: marriage
+        from: 2021.06.02
     color: "\u001B[35m"
-  - code: offer_prague
-    from: 2021.07.16
+  - list:
+      - code: offer_prague
+        from: 2021.07.16
+      - code: java_begin
+        from: 2012.06.21
     color: "\u001B[34m"
-  - code: java_begin
-    from: 2012.06.21
-    color: "\u001B[34m"
+
+events:
   - code: ZEL_34_31
     from: 2018.06.27
     color: "\u001B[32m"
   - code: IRISKA
     from: 2019.06.01
     color: "\u001B[33m"
-  - code: KATYA_MOVED
-    from: 2019.07.05
-    color: "\u001B[35m"

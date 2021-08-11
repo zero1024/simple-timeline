@@ -7,6 +7,7 @@ import java.time.LocalDate
 data class TimeLineConfig(
     val base: Base,
     val timeRanges: List<TimeRangeList>,
+    val eventGroups: List<EventGroup>,
     private val events: List<Event>,
 ) {
 
