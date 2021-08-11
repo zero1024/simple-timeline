@@ -36,10 +36,10 @@ fun main(args: Array<String>) {
         output.addAndMergeUpToBaseLine(borderLine, DOWN)
         output.add(lines, DOWN)
 
-        handleEvents(timeLine, unhandledTimeRanges.convertToEvents(), output, DOWN)
+        handleEvents(timeLine, unhandledTimeRanges.convertToEvents(), output, DOWN, false)
     }
 
-    handleEvents(timeLine, timeLineConfig.sortedEvents, output, UP)
+    handleEvents(timeLine, timeLineConfig.sortedEvents, output, UP, true)
 
     output.print()
 }
@@ -52,11 +52,17 @@ private fun handleEvents(
     events: List<Event>,
     output: ConsoleOutput,
     direction: ConsoleOutput.Direction,
+    upToTheBaseLine: Boolean,
 ) {
     var tmpEvents = events
     while (tmpEvents.isNotEmpty()) {
         val (lines, unhandledEvents) = lineForEvents(timeLine, tmpEvents)
-        output.add(supportLineForEvents(timeLine, tmpEvents), direction)
+        val supportLine = supportLineForEvents(timeLine, tmpEvents)
+        if (upToTheBaseLine) {
+            output.addAndMergeUpToBaseLine(supportLine, direction)
+        } else {
+            output.add(supportLine, direction)
+        }
         output.add(lines, direction)
         tmpEvents = unhandledEvents
     }
