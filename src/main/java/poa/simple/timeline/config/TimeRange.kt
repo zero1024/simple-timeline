@@ -5,6 +5,7 @@ import org.valiktor.validate
 import poa.simple.timeline.MMM
 import poa.simple.timeline.MMM_YYYY
 import poa.simple.timeline.duration
+import poa.simple.timeline.monthRange
 import java.time.LocalDate
 
 data class TimeRange(val code: String, val from: LocalDate, val till: LocalDate) {
@@ -21,7 +22,7 @@ data class TimeRange(val code: String, val from: LocalDate, val till: LocalDate)
 
     private fun shortName() = name().take(5)
 
-    private fun shortDate() = " ${this.from.format(MMM)}-${this.till.format(MMM)} "
+    private fun shortDate() = monthRange(from, till)
 
     fun name(condition: (String) -> Boolean) = if (condition(name())) name() else shortName()
 

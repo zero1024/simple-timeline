@@ -3,10 +3,7 @@ package poa.simple.timeline.config
 import kotlinx.serialization.Serializable
 import org.valiktor.functions.isLessThan
 import org.valiktor.validate
-import poa.simple.timeline.DD_MMM
-import poa.simple.timeline.MMM
-import poa.simple.timeline.duration
-import poa.simple.timeline.now
+import poa.simple.timeline.*
 import java.time.LocalDate
 
 @Serializable
@@ -36,7 +33,7 @@ data class Event(
 
     fun date(): String {
         return if (till != null) {
-            " ${this.from.format(MMM)}-${this.till.format(MMM)} "
+            monthRange(from, till)
         } else {
             " ${this.from.format(DD_MMM)} "
         }

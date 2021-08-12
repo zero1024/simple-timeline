@@ -15,3 +15,11 @@ fun duration(from: LocalDate, till: LocalDate): String {
     val period = Period.between(from, till)
     return " ${period.toString().replace("P", "").lowercase()} "
 }
+
+fun monthRange(from: LocalDate, till: LocalDate): String {
+    return if (from.month == till.month) {
+        " ${from.format(MMM)} "
+    } else {
+        " ${from.format(MMM)}-${till.format(MMM)} "
+    }
+}
