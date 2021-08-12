@@ -39,7 +39,7 @@ class EventLineBuilder(
                 l = tillIdx + 1 - fromIdx
             }
 
-            if (fromIdx - prevTillIdx < 2) {
+            if (fromIdx - prevTillIdx < 1) {
                 unhandledEvents.add(event)
             } else {
                 prevTillIdx = tillIdx
