@@ -39,7 +39,7 @@ fun lineForTimeRanges(
         val l = tillIdx + 1 - fromIdx
 
         val dateText = timeRange.date { l >= it.length + 2 }
-        val durationText = timeRange.duration { l >= it.length + 2 }
+        val durationText = timeRange.duration()
         val nameText = timeRange.name { l >= it.length + 2 }
 
         if (lengthIsValid(l, dateText, durationText, nameText)) {

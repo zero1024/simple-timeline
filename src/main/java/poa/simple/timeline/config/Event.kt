@@ -26,9 +26,9 @@ data class Event(
 
     fun duration(): String {
         return if (till != null) {
-            " ${till.decimalYear().subtract(from.decimalYear())}y "
+            duration(from, till)
         } else {
-            " ${now.decimalYear().subtract(from.decimalYear())} years "
+            duration(from, now)
         }
     }
 

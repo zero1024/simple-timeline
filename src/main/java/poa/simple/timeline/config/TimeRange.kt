@@ -4,7 +4,7 @@ import org.valiktor.functions.isLessThan
 import org.valiktor.validate
 import poa.simple.timeline.MM
 import poa.simple.timeline.MM_YYYY
-import poa.simple.timeline.decimalYear
+import poa.simple.timeline.duration
 import java.time.LocalDate
 
 data class TimeRange(val code: String, val from: LocalDate, val till: LocalDate) {
@@ -15,24 +15,19 @@ data class TimeRange(val code: String, val from: LocalDate, val till: LocalDate)
         }
     }
 
-    fun name() = code.uppercase()
+    private fun name() = code.uppercase()
 
-    fun duration() = " ${till.decimalYear().subtract(from.decimalYear())} years "
+    private fun date() = " ${this.from.format(MM_YYYY)}-${this.till.format(MM_YYYY)} "
 
-    fun date() = " ${this.from.format(MM_YYYY)}-${this.till.format(MM_YYYY)} "
+    private fun shortName() = name().take(5)
 
-    fun shortName() = name().take(5)
-
-    fun shortDuration() = " ${till.decimalYear().subtract(from.decimalYear())}y "
-
-    fun shortDate() = " ${this.from.format(MM)}-${this.till.format(MM)} "
+    private fun shortDate() = " ${this.from.format(MM)}-${this.till.format(MM)} "
 
     fun name(condition: (String) -> Boolean) = if (condition(name())) name() else shortName()
 
-    fun duration(condition: (String) -> Boolean) = if (condition(duration())) duration() else shortDuration()
-
     fun date(condition: (String) -> Boolean) = if (condition(date())) date() else shortDate()
 
+    fun duration(): String = duration(from, till)
 
 }
 
