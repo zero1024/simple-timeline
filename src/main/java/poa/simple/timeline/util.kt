@@ -1,16 +1,15 @@
 package poa.simple.timeline
 
-import java.math.BigDecimal
-import java.math.RoundingMode
 import java.time.LocalDate
 import java.time.Period
 import java.time.format.DateTimeFormatter
+import java.util.*
 
 val now = LocalDate.now()
 
-val MM_YYYY = DateTimeFormatter.ofPattern("MM.yyyy")
-val MM = DateTimeFormatter.ofPattern("MM")
-val DD_MMM = DateTimeFormatter.ofPattern("dd MMM")
+val MMM_YYYY = DateTimeFormatter.ofPattern("MMM yyyy", Locale.ENGLISH)
+val MMM = DateTimeFormatter.ofPattern("MMM", Locale.ENGLISH)
+val DD_MMM = DateTimeFormatter.ofPattern("dd MMM", Locale.ENGLISH)
 
 fun duration(from: LocalDate, till: LocalDate): String {
     val period = Period.between(from, till)
