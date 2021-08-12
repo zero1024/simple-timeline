@@ -19,10 +19,19 @@ class ConsoleOutput(baseLine: CharArray) {
         lines(direction).add(line)
     }
 
+    fun currentLineOffset(direction: Direction) = lines(direction).size
+
     fun addAndMergeUpToBaseLine(newLine: Array<ColoredChar>, direction: Direction) {
+        addAndMergeUpTo(newLine, direction, 0)
+    }
+
+    fun addAndMergeUpTo(newLine: Array<ColoredChar>, direction: Direction, mergeOffset: Int) {
+        val lines = lines(direction).let {
+            it.reversed().take(it.size - mergeOffset)
+        }
         for ((idx, c) in newLine.withIndex()) {
             if (c.char != ' ' && c.char != '-') {
-                for (line in lines(direction)) {
+                for (line in lines) {
                     if (line[idx].char == ' ' || line[idx].char == '-') {
                         line[idx] = c
                     }

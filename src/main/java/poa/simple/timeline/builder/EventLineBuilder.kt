@@ -71,8 +71,8 @@ class EventLineBuilder(
             val till = event.till ?: event.from
             val (fromIdx, tillIdx) = timeLine.getCoord(from, till)
 
-            line[fromIdx] = ColoredChar('|', event.color(defaultColor))
-            line[tillIdx] = ColoredChar('|', event.color(defaultColor))
+            line[fromIdx] = ColoredChar(':', event.color(defaultColor))
+            line[tillIdx] = ColoredChar(':', event.color(defaultColor))
         }
 
         return line

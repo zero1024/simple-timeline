@@ -94,8 +94,8 @@ fun supportLineForTimeRanges(
     val maxTill = rangeList.sortedList.maxOf { it.till }
     val (fromIdx, tillIdx) = timeLine.getCoord(minFrom, maxTill)
 
-    line[fromIdx] = ColoredChar('|', rangeList.color)
-    line[tillIdx] = ColoredChar('|', rangeList.color)
+    line[fromIdx] = ColoredChar(':', rangeList.color)
+    line[tillIdx] = ColoredChar(':', rangeList.color)
 
     return line
 }
