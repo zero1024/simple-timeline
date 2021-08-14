@@ -14,12 +14,28 @@ repositories {
 dependencies {
     implementation 'org.valiktor:valiktor-core:0.12.0'
     implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.5.21'
+    implementation 'org.jetbrains.kotlin:kotlin-reflect:1.5.21'
 
-    implementation 'com.charleskorn.kaml:kaml:0.35.0'
+    implementation 'com.charleskorn.kaml:kaml:0.35.1'
     implementation 'org.jetbrains.kotlinx:kotlinx-serialization-core:1.2.2'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.2'
+}
+
+jar {
+
+    manifest {
+        attributes "Main-Class": "poa.simple.timeline.runner.Console_runnerKt"
+    }
+
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+tasks.named("jar") {
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
 }
 
 test {
