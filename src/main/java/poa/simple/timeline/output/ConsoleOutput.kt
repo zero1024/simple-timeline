@@ -12,7 +12,11 @@ class ConsoleOutput(baseLine: CharArray) {
     private val linesAfter = ArrayList<Array<ColoredChar>>()
 
     fun add(lines: List<Array<ColoredChar>>, direction: Direction) {
-        lines.forEach { add(it, direction) }
+        if (direction == Direction.UP) {
+            lines.reversed()
+        } else {
+            lines
+        }.forEach { add(it, direction) }
     }
 
     fun add(line: Array<ColoredChar>, direction: Direction) {
