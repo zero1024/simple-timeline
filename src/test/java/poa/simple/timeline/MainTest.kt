@@ -6,7 +6,7 @@ import poa.simple.timeline.runner.main
 class MainTest {
 
     @Test
-    internal fun test() {
+    fun test() {
         main(arrayOf("src/test/resources/life.yml"))
     }
 

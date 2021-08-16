@@ -1,6 +1,9 @@
 package poa.simple.timeline.runner
 
 import com.charleskorn.kaml.Yaml
+import org.jline.reader.LineReaderBuilder
+import org.jline.reader.impl.completer.FileNameCompleter
+import org.jline.terminal.TerminalBuilder
 import poa.simple.timeline.YearTimeLine
 import poa.simple.timeline.birthdayLine
 import poa.simple.timeline.builder.EventLineBuilder
@@ -15,11 +18,12 @@ import poa.simple.timeline.output.ConsoleOutput.Direction.UP
 import poa.simple.timeline.supportLineForTimeRanges
 import java.io.File
 
+
 fun main(args: Array<String>) {
 
-    val configFile = args[0]
+    val configFile: File = toFile(if (args.isNotEmpty()) args[0] else System.getenv("PWD"))
 
-    val timeLineConfig = File(configFile).inputStream().use {
+    val timeLineConfig = configFile.inputStream().use {
         Yaml.default.decodeFromStream(TimeLineConfig.serializer(), it)
     }
 
@@ -59,6 +63,28 @@ fun main(args: Array<String>) {
     eventLineBuilder.handleEvents(timeLine, timeLineConfig.sortedEvents, output, UP, 1)
 
     output.print()
+}
+
+private fun toFile(path: String): File {
+    val trimmedPath = path.trim()
+    val file = File(trimmedPath)
+    if (!file.exists()) {
+        throw IllegalArgumentException("There is no file $trimmedPath")
+    }
+    return if (file.isDirectory) {
+        if (file.list() == null || file.list().isEmpty()) {
+            throw IllegalArgumentException("$trimmedPath is empty")
+        } else {
+            println("Available files: ${file.list().asList().joinToString { it }}")
+            val reader = LineReaderBuilder.builder()
+                .completer(FileNameCompleter())
+                .terminal(TerminalBuilder.terminal())
+                .build()
+            toFile(reader.readLine("simple-timeline>"))
+        }
+    } else {
+        file
+    }
 }
 
 private fun TimeRangeList.convertToEvents() =
