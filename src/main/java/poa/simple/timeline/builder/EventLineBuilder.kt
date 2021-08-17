@@ -1,12 +1,13 @@
 package poa.simple.timeline.builder
 
 import poa.simple.timeline.*
+import poa.simple.timeline.config.Color
 import poa.simple.timeline.config.Event
 import poa.simple.timeline.output.ColoredChar
 
 class EventLineBuilder(
     private val defaultChar: Char,
-    private val defaultColor: String,
+    private val defaultColor: Color,
     private val maxEventText: Int = 20,
 ) {
 

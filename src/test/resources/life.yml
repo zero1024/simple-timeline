@@ -12,15 +12,15 @@ timeRanges:
             "liga_stavok.2017.01.17-2017.03.17",
             "profee.2017.05.02-2020.06.05",
             "FREE.2020.06.06-9999.99.99" ]
-    color: "\u001B[34m"
+    color: "BLUE"
   - list: [ "chistopol.2006-2013.02.01",
             "kazan.2013.02.01-2016.01.08",
             "moscow.2016.01.08-9999.99.99" ]
-    color: "\u001B[32m"
+    color: "GREEN"
   - list: [ "dating.2018.10.20-9999.99.99" ]
-    color: "\u001B[35m"
+    color: "PURPLE"
   - list: [ "italy.2019.06.01-2019.06.14","prague.2019.11.02-2019.11.05" ]
-    color: "\u001B[31m"
+    color: "RED"
 
 eventGroups:
   - list:
@@ -28,18 +28,18 @@ eventGroups:
         from: 2019.07.05
       - code: marriage
         from: 2021.06.02
-    color: "\u001B[35m"
+    color: "PURPLE"
   - list:
       - code: offer_prague
         from: 2021.07.16
       - code: java_begin
         from: 2012.06.21
-    color: "\u001B[34m"
+    color: "BLUE"
 
 events:
   - code: ZEL_34_31
     from: 2018.06.27
-    color: "\u001B[32m"
+    color: "GREEN"
   - code: IRISKA
     from: 2019.06.01
-    color: "\u001B[33m"
+    color: "YELLOW"

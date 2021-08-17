@@ -1,9 +1,9 @@
 package poa.simple.timeline
 
+import poa.simple.timeline.config.Color
 import poa.simple.timeline.config.TimeRange
 import poa.simple.timeline.config.TimeRangeList
 import poa.simple.timeline.output.ColoredChar
-import poa.simple.timeline.output.ColoredChar.Companion.BLACK
 import poa.simple.timeline.output.ColoredChar.Companion.EMPTY_CHAR
 import java.time.LocalDate
 
@@ -12,12 +12,12 @@ fun birthdayLine(
     timeLine: YearTimeLine,
     birthday: LocalDate,
 ): Array<ColoredChar> {
-    val line = Array(timeLine.length()) { ColoredChar('-', BLACK) }
+    val line = Array(timeLine.length()) { ColoredChar('-', Color.BLACK) }
     for (year in timeLine.years()) {
         val date = LocalDate.of(year, birthday.monthValue, birthday.dayOfMonth)
         val pos = timeLine.getCoord(date) - 1
         val age = year - birthday.year
-        line.addText("${age}y", pos, BLACK)
+        line.addText("${age}y", pos, Color.BLACK)
     }
     return line
 }
@@ -55,13 +55,13 @@ fun lineForTimeRanges(
     return listOf(dateLine, durationLine, nameLine).map { it.adjust('=') } to TimeRangeList(rangeList.color, unhandled)
 }
 
-fun Array<ColoredChar>.addText(text: String, offset: Int, color: String) {
+fun Array<ColoredChar>.addText(text: String, offset: Int, color: Color) {
     for (i in text.indices) {
         this[i + offset] = ColoredChar(text[i], color)
     }
 }
 
-fun Array<ColoredChar>.addText(text: String, offset: Int, length: Int, color: String) {
+fun Array<ColoredChar>.addText(text: String, offset: Int, length: Int, color: Color) {
 
     val indent = (length - text.length) / 2
 

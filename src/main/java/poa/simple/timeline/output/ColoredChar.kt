@@ -1,8 +1,14 @@
 package poa.simple.timeline.output
 
-data class ColoredChar(val char: Char, val color: String = BLACK) {
+import poa.simple.timeline.config.BackgroundColor
+import poa.simple.timeline.config.Color
+
+data class ColoredChar(
+    val char: Char,
+    val color: Color = Color.BLACK,
+    val backColor: BackgroundColor? = null,
+) {
     companion object {
-        const val BLACK = "\u001B[30m"
         val EMPTY_CHAR = ColoredChar(' ')
     }
 }

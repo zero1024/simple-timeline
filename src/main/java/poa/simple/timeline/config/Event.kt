@@ -11,7 +11,7 @@ data class Event(
     val code: String,
     val from: @Serializable(with = LocalDateSerializer::class) LocalDate,
     val till: @Serializable(with = NullableLocalDateSerializer::class) LocalDate? = null,
-    private val color: String? = null,
+    private val color: Color? = null,
 ) {
 
     init {
@@ -39,7 +39,7 @@ data class Event(
         }
     }
 
-    fun color(default: String) = color ?: default
+    fun color(default: Color) = color ?: default
 
     fun getMaxTextLength() = maxOf(name().length, duration().length, date().length)
 

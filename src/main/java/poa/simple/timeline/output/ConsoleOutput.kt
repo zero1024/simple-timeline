@@ -1,11 +1,13 @@
 package poa.simple.timeline.output
 
+import poa.simple.timeline.config.BackgroundColor
+
 class ConsoleOutput(baseLine: CharArray) {
 
     private val baseLine: Array<ColoredChar>
 
     init {
-        this.baseLine = baseLine.map { ColoredChar(it, "\u001B[43m") }.toTypedArray()
+        this.baseLine = baseLine.map { ColoredChar(it, backColor = BackgroundColor.YELLOW) }.toTypedArray()
     }
 
     private val linesBefore = ArrayList<Array<ColoredChar>>()
@@ -57,7 +59,10 @@ class ConsoleOutput(baseLine: CharArray) {
 
     private fun print(chars: Array<ColoredChar>) {
         for (char in chars) {
-            print(char.color)
+            print(char.color.code)
+            if (char.backColor != null) {
+                print(char.backColor.code)
+            }
             if (Character.isLetterOrDigit(char.char)) {
                 print("\u001B[1m")
             }

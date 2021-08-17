@@ -4,18 +4,15 @@ import com.charleskorn.kaml.Yaml
 import org.jline.reader.LineReaderBuilder
 import org.jline.reader.impl.completer.FileNameCompleter
 import org.jline.terminal.TerminalBuilder
-import poa.simple.timeline.YearTimeLine
-import poa.simple.timeline.birthdayLine
+import poa.simple.timeline.*
 import poa.simple.timeline.builder.EventLineBuilder
+import poa.simple.timeline.config.Color
 import poa.simple.timeline.config.Event
 import poa.simple.timeline.config.TimeLineConfig
 import poa.simple.timeline.config.TimeRangeList
-import poa.simple.timeline.lineForTimeRanges
-import poa.simple.timeline.output.ColoredChar.Companion.BLACK
 import poa.simple.timeline.output.ConsoleOutput
 import poa.simple.timeline.output.ConsoleOutput.Direction.DOWN
 import poa.simple.timeline.output.ConsoleOutput.Direction.UP
-import poa.simple.timeline.supportLineForTimeRanges
 import java.io.File
 
 
@@ -37,7 +34,7 @@ fun main(args: Array<String>) {
     }
 
 
-    val eventLineBuilder = EventLineBuilder(' ', BLACK)
+    val eventLineBuilder = EventLineBuilder(' ', Color.BLACK)
 
     for (timeRanges in timeLineConfig.timeRanges) {
 
