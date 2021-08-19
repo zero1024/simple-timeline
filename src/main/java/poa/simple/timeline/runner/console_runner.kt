@@ -4,8 +4,10 @@ import com.charleskorn.kaml.Yaml
 import org.jline.reader.LineReaderBuilder
 import org.jline.reader.impl.completer.FileNameCompleter
 import org.jline.terminal.TerminalBuilder
-import poa.simple.timeline.*
+import poa.simple.timeline.YearTimeLine
+import poa.simple.timeline.builder.BirthdayLineBuilder
 import poa.simple.timeline.builder.EventLineBuilder
+import poa.simple.timeline.builder.TimeRangeLineBuilder
 import poa.simple.timeline.config.Color
 import poa.simple.timeline.config.Event
 import poa.simple.timeline.config.TimeLineConfig
@@ -15,6 +17,9 @@ import poa.simple.timeline.output.ConsoleOutput.Direction.DOWN
 import poa.simple.timeline.output.ConsoleOutput.Direction.UP
 import java.io.File
 
+val birthdayLineBuilder = BirthdayLineBuilder('-', Color.BLACK)
+val eventLineBuilder = EventLineBuilder(' ', Color.BLACK)
+val timeRangeLineBuilder = TimeRangeLineBuilder('-', Color.BLACK)
 
 fun main(args: Array<String>) {
 
@@ -28,19 +33,21 @@ fun main(args: Array<String>) {
 
     val output = ConsoleOutput(timeLine.line)
 
+
+
     if (timeLineConfig.base.birthday != null) {
-        val line = birthdayLine(timeLine, timeLineConfig.base.birthday)
+        val line = birthdayLineBuilder.buildLine(timeLine, timeLineConfig.base.birthday)
         output.add(line, UP)
     }
 
 
-    val eventLineBuilder = EventLineBuilder(' ', Color.BLACK)
+
 
     for (timeRanges in timeLineConfig.timeRanges) {
 
-        val borderLine = supportLineForTimeRanges(timeLine, timeRanges)
+        val borderLine = timeRangeLineBuilder.buildSupportLine(timeLine, timeRanges)
 
-        val (lines, unhandledTimeRanges) = lineForTimeRanges(timeLine, timeRanges)
+        val (lines, unhandledTimeRanges) = timeRangeLineBuilder.buildLine(timeLine, timeRanges)
 
         output.addAndMergeUpToBaseLine(borderLine, DOWN)
         output.add(lines, DOWN)
@@ -96,8 +103,8 @@ private fun EventLineBuilder.handleEvents(
 ) {
     var tmpEvents = events
     while (tmpEvents.isNotEmpty()) {
-        val (lines, unhandledEvents) = lineForEvents(timeLine, tmpEvents)
-        val supportLine = supportLineForEvents(timeLine, tmpEvents)
+        val (lines, unhandledEvents) = buildLine(timeLine, tmpEvents)
+        val supportLine = buildSupportLine(timeLine, tmpEvents)
         output.addAndMergeUpTo(supportLine, direction, lineOffset)
         output.add(lines, direction)
         tmpEvents = unhandledEvents

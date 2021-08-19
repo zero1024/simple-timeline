@@ -1,8 +1,11 @@
 package poa.simple.timeline.builder
 
-import poa.simple.timeline.*
+import poa.simple.timeline.YearTimeLine
+import poa.simple.timeline.addText
+import poa.simple.timeline.adjust
 import poa.simple.timeline.config.Color
 import poa.simple.timeline.config.Event
+import poa.simple.timeline.lengthIsValid
 import poa.simple.timeline.output.ColoredChar
 
 class EventLineBuilder(
@@ -11,7 +14,7 @@ class EventLineBuilder(
     private val maxEventText: Int = 20,
 ) {
 
-    fun lineForEvents(
+    fun buildLine(
         timeLine: YearTimeLine,
         events: List<Event>,
     ): Pair<List<Array<ColoredChar>>, List<Event>> {
@@ -61,7 +64,7 @@ class EventLineBuilder(
         return listOf(dateLine, durationLine, nameLine).map { it.adjust('=') } to unhandledEvents
     }
 
-    fun supportLineForEvents(
+    fun buildSupportLine(
         timeLine: YearTimeLine,
         events: List<Event>,
     ): Array<ColoredChar> {
