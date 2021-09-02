@@ -7,6 +7,7 @@ data class ColoredChar(
     val char: Char,
     val color: Color = Color.BLACK,
     val backColor: BackgroundColor? = null,
+    val isBold: Boolean = Character.isLetterOrDigit(char),
 ) {
     companion object {
         val EMPTY_CHAR = ColoredChar(' ')

@@ -34,13 +34,10 @@ fun main(args: Array<String>) {
     val output = ConsoleOutput(timeLine.line)
 
 
-
     if (timeLineConfig.base.birthday != null) {
         val line = birthdayLineBuilder.buildLine(timeLine, timeLineConfig.base.birthday)
         output.add(line, UP)
     }
-
-
 
 
     for (timeRanges in timeLineConfig.timeRanges) {
