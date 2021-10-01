@@ -1,0 +1,9 @@
+base:
+  from: 2016
+  till: 2022
+  birthday: 1988.11.01
+
+timeRanges:
+  - list: [ "job1.2016.09.01-2018.06.21",
+            "job2.2018.07.01-9999.99.99" ]
+    color: "BLUE"

@@ -1,15 +1,16 @@
 package poa.simple.timeline.config
 
-import kotlinx.serialization.*
+import kotlinx.serialization.Serializable
 import java.time.LocalDate
 
 @Serializable
 data class TimeLineConfig(
     val base: Base,
-    val timeRanges: List<TimeRangeList>,
-    val eventGroups: List<EventGroup>,
-    private val events: List<Event>,
+    val timeRanges: List<TimeRangeList> = emptyList(),
+    val eventGroups: List<EventGroup> = emptyList(),
+    private val events: List<Event> = emptyList(),
 ) {
+
 
     val sortedEvents = events.sortedBy { it.from }
 
