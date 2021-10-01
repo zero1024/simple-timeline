@@ -73,10 +73,10 @@ private fun toFile(path: String): File {
         throw IllegalArgumentException("There is no file $trimmedPath")
     }
     return if (file.isDirectory) {
-        if (file.list() == null || file.list().isEmpty()) {
+        if (file.files().isEmpty()) {
             throw IllegalArgumentException("$trimmedPath is empty")
         } else {
-            println("Available files: ${file.list().asList().joinToString { it }}")
+            println("Available files: ${file.files().joinToString { it }}")
             val reader = LineReaderBuilder.builder()
                 .completer(FileNameCompleter())
                 .terminal(TerminalBuilder.terminal())
@@ -87,6 +87,8 @@ private fun toFile(path: String): File {
         file
     }
 }
+
+private fun File?.files(): List<String> = this?.list()?.filter { it.endsWith(".yml") } ?: emptyList()
 
 private fun TimeRangeList.convertToEvents() =
     this.sortedList.map { Event(it.code, it.from, it.till, color = this.color) }
